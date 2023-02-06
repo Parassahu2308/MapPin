@@ -5,6 +5,8 @@ const userRouter = require("./routes/Users");
 const app = express();
 const { MONGO_URL } = require("./secret");
 app.use(express.json());
+const cors = require("cors");
+app.use(cors());
 
 mongoose
   .connect(MONGO_URL)
