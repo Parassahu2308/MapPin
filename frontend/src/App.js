@@ -6,15 +6,19 @@ import RoomIcon from "@mui/icons-material/Room";
 import StarIcon from "@mui/icons-material/Star";
 import "./App.css";
 import axios from "axios";
+import Register from "./components/register";
+import Login from "./components/login";
 
 function App() {
   const [pins, setPins] = useState([]);
-  const [currentUsername, setCurrentUsername] = useState("paras");
+  const [currentUsername, setCurrentUsername] = useState(null);
   const [currentPlacedId, setCurrentPlacedId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
   const [star, setStar] = useState(0);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [viewport, setViewport] = useState({
     latitude: 28.7041,
     longitude: 77.1025,
@@ -76,7 +80,7 @@ function App() {
     <div className="App">
       <Map
         initialViewState={viewport}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100vw", height: "100vh", position: "relative" }}
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX}
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
@@ -166,6 +170,23 @@ function App() {
             </div>
           </Popup>
         )}
+        {currentUsername ? (
+          <button className="button logout">Log out</button>
+        ) : (
+          <buttons className="buttons">
+            <button className="button login" onClick={() => setShowLogin(true)}>
+              Login
+            </button>
+            <button
+              className="button register"
+              onClick={() => setShowRegister(true)}
+            >
+              Register
+            </button>
+          </buttons>
+        )}
+        {showRegister && <Register setShowRegister={setShowRegister} />}
+        {showLogin && <Login setShowLogin={setShowLogin} />}
       </Map>
     </div>
   );
