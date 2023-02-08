@@ -4,7 +4,7 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import "./login.css";
 
-export default function Login({ setShowLogin }) {
+export default function Login({ setShowLogin, myStorage, setCurrentUsername }) {
   const [error, setError] = useState(false);
   const usernameRef = useRef();
   const passwordRef = useRef();
@@ -20,8 +20,9 @@ export default function Login({ setShowLogin }) {
         "http://localhost:5000/api/users/login",
         user
       );
-      //   setCurrentUsername(res.data.username);  , setCurrentUsername, myStorage
-      //   myStorage.setItem("user", res.data.username);
+      console.log(res);
+      setCurrentUsername(res.data.User.username);
+      myStorage.setItem("user", res.data.User.username);
       setShowLogin(false);
     } catch (err) {
       setError(true);

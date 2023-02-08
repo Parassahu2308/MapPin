@@ -8,10 +8,14 @@ import "./App.css";
 import axios from "axios";
 import Register from "./components/register";
 import Login from "./components/login";
+import { format } from "timeago.js";
 
 function App() {
+  const myStorage = window.localStorage;
   const [pins, setPins] = useState([]);
-  const [currentUsername, setCurrentUsername] = useState(null);
+  const [currentUsername, setCurrentUsername] = useState(
+    myStorage.getItem("user")
+  );
   const [currentPlacedId, setCurrentPlacedId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
@@ -76,6 +80,11 @@ function App() {
     }
   };
 
+  const handleLogout = () => {
+    myStorage.removeItem("user");
+    setCurrentUsername(null);
+  };
+
   return (
     <div className="App">
       <Map
@@ -84,7 +93,7 @@ function App() {
         mapStyle="mapbox://styles/mapbox/streets-v9"
         mapboxAccessToken={MAPBOX}
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
-        onDblClick={handleAddClick}
+        onDblClick={currentUsername && handleAddClick}
       >
         {pins.map((p) => (
           <>
@@ -106,6 +115,7 @@ function App() {
             </Marker>
             {p._id === currentPlacedId && (
               <Popup
+                key={p._id}
                 longitude={p.long}
                 latitude={p.lat}
                 anchor="left"
@@ -126,7 +136,7 @@ function App() {
                   <p className="username">
                     Created by <b>{p.username}</b>
                   </p>
-                  <p className="date">{p.createdAt}</p>
+                  <p className="date">{format(p.createdAt)}</p>
                 </div>
               </Popup>
             )}
@@ -171,9 +181,11 @@ function App() {
           </Popup>
         )}
         {currentUsername ? (
-          <button className="button logout">Log out</button>
+          <button className="button logout" onClick={handleLogout}>
+            Log out
+          </button>
         ) : (
-          <buttons className="buttons">
+          <div className="buttons">
             <button className="button login" onClick={() => setShowLogin(true)}>
               Login
             </button>
@@ -183,10 +195,16 @@ function App() {
             >
               Register
             </button>
-          </buttons>
+          </div>
         )}
         {showRegister && <Register setShowRegister={setShowRegister} />}
-        {showLogin && <Login setShowLogin={setShowLogin} />}
+        {showLogin && (
+          <Login
+            setShowLogin={setShowLogin}
+            myStorage={myStorage}
+            setCurrentUsername={setCurrentUsername}
+          />
+        )}
       </Map>
     </div>
   );
