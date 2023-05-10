@@ -75,6 +75,7 @@ function App() {
       // setPins([...pins, res.data.Pins]);
       console.log(res);
       setNewPlace(null);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
@@ -102,6 +103,7 @@ function App() {
               latitude={p.lat}
               offsetLeft={-3.5 * viewport.zoom}
               offsetTop={-7 * viewport.zoom}
+              key={p._id}
             >
               <RoomIcon
                 style={{
@@ -110,18 +112,19 @@ function App() {
                     p.username === currentUsername ? "tomato" : "slateblue",
                   cursor: "pointer",
                 }}
+                key={p._id}
                 onClick={() => handleMarkerClick(p._id, p.lat, p.long)}
               />
             </Marker>
             {p._id === currentPlacedId && (
               <Popup
-                key={p._id}
                 longitude={p.long}
                 latitude={p.lat}
                 anchor="left"
                 closeButton={true}
                 closeOnClick={false}
                 onClose={() => setCurrentPlacedId(null)}
+                key={p._id}
               >
                 <div className="Card">
                   <label>Place</label>
@@ -186,18 +189,32 @@ function App() {
           </button>
         ) : (
           <div className="buttons">
-            <button className="button login" onClick={() => setShowLogin(true)}>
+            <button
+              className="button login"
+              onClick={() => {
+                setShowLogin(true);
+                setShowRegister(false);
+              }}
+            >
               Login
             </button>
             <button
               className="button register"
-              onClick={() => setShowRegister(true)}
+              onClick={() => {
+                setShowRegister(true);
+                setShowLogin(false);
+              }}
             >
               Register
             </button>
           </div>
         )}
-        {showRegister && <Register setShowRegister={setShowRegister} />}
+        {showRegister && (
+          <Register
+            setShowRegister={setShowRegister}
+            setShowLogin={setShowLogin}
+          />
+        )}
         {showLogin && (
           <Login
             setShowLogin={setShowLogin}

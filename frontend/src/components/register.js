@@ -7,6 +7,7 @@ import "./register.css";
 export default function Register({ setShowRegister }) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  // const [timer, setTimer] = useState(5);
   const usernameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
@@ -18,11 +19,22 @@ export default function Register({ setShowRegister }) {
       email: emailRef.current.value,
       password: passwordRef.current.value,
     };
-
     try {
       await axios.post("http://localhost:5000/api/users/signup", newUser);
       setError(false);
       setSuccess(true);
+      // const myTimeout = setTimeout(closeRegister, 5000);
+      // function closeRegister() {
+      //   clearTimeout(myTimeout);
+      alert("Register Successfully! Now Login");
+      setShowRegister(false);
+      // }
+      // const myInterval = setInterval(closeTimer, 1000);
+      // function closeTimer() {
+      //   setTimer(timer - 1);
+      // }
+      // setShowRegister(false);
+      // setShowLogin(true);
     } catch (err) {
       setError(true);
     }
@@ -46,7 +58,9 @@ export default function Register({ setShowRegister }) {
           Register
         </button>
         {success && (
-          <span className="success">Successfull. You can login now!</span>
+          <span className="success">
+            Successfull. You can login now! After 5 Seconds
+          </span>
         )}
         {error && <span className="failure">Something went wrong!</span>}
       </form>
